@@ -7,7 +7,35 @@ jobs:
     machine:
       image: ubuntu-2004:202010-01
     steps:
+      - run:
+          name: "Monitor CPU usage"
+          background: true
+          command: |
+            sleep 3
+
+            echo CPU util avg over 1 second intervals >> /tmp/cpu_util.log
+            echo >> /tmp/cpu_util.log
+            echo "Timestamp \ CPU Util " \| %user %nice %system %iowait %steal %idle >> /tmp/cpu_util.log
+
+            while true; do
+              echo $(date +"%D %T %Z") \| $(iostat -c | sed '1d;3d') >> /tmp/cpu_util.log
+            done
+      - run:
+          name: "Monitor memory usage"
+          background: true
+          command: |
+            vmstat -t 1 100 >> /tmp/mem_util.log
       - hello-world/echo-command
+      - run: |
+          dd if=/dev/random iflag=fullblock of=./randomFile1 bs=300M count=1
+          sleep 5
+          dd if=/dev/random iflag=fullblock of=./randomFile2 bs=400M count=1
+          sleep 5
+          dd if=/dev/random iflag=fullblock of=./randomFile3 bs=500M count=1
+      - store_artifacts:
+          path: /tmp/cpu_util.log
+      - store_artifacts:
+          path: /tmp/mem_util.log  
 
 workflows:
   main:

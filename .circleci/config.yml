@@ -1,0 +1,15 @@
+version: 2.1
+orbs:
+  hello-world: sample-orbs/hello-world@0.0.10
+
+jobs:
+  echo:
+    machine:
+      image: ubuntu-2004:202010-01
+    steps:
+      - hello-world/echo-command
+
+workflows:
+  main:
+    jobs:
+      - echo

@@ -27,11 +27,11 @@ jobs:
             vmstat -t 1 100 >> /tmp/mem_util.log
       - hello-world/echo-command
       - run: |
-          dd if=/dev/random iflag=fullblock of=./randomFile1 bs=300M count=1
+          dd if=/dev/random iflag=fullblock of=./randomFile1 bs=10M count=1
           sleep 5
-          dd if=/dev/random iflag=fullblock of=./randomFile2 bs=400M count=1
+          dd if=/dev/random iflag=fullblock of=./randomFile2 bs=20M count=1
           sleep 5
-          dd if=/dev/random iflag=fullblock of=./randomFile3 bs=500M count=1
+          dd if=/dev/random iflag=fullblock of=./randomFile3 bs=30M count=1
       - store_artifacts:
           path: /tmp/cpu_util.log
       - store_artifacts:

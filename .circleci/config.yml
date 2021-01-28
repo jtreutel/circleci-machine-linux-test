@@ -12,7 +12,7 @@ jobs:
           background: true
           command: |
             sleep 3
-            echo "Time \| CPU \| Mem | tee /tmp/cpu_mem_util.log
+            echo "Time \| CPU \| Mem | tee /tmp/cpu_mem_util.log"
             while true; do
               echo $(date +"%D %T %Z") \| $(top -bn1 | sed -n '/Cpu/p' | awk '{print $2 + $4}')%  \| $(free | grep Mem | awk '{printf "%.2f\n", $3/$2 * 100.0}')% | tee /tmp/cpu_mem_util.log
               sleep 1

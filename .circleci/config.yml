@@ -25,7 +25,7 @@ jobs:
           sleep 5
           dd if=/dev/random iflag=fullblock of=./randomFile3 bs=15M count=1
           sudo snap install stress-ng
-          stress-ng --vm-bytes $(awk '/MemAvailable/{printf "%d\n", $2 * 0.091;}' < /proc/meminfo)k --vm-keep -m 10 -t 30
+          stress-ng --vm-bytes $(awk '/MemAvailable/{printf "%d\n", $2 * 0.91;}' < /proc/meminfo)k --vm-keep -m 1 -t 30
       - store_artifacts:
           path: /tmp/cpu_mem_util.log
 

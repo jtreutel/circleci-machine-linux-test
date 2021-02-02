@@ -1,35 +1,38 @@
-version: 2.1
 orbs:
-  hello-world: sample-orbs/hello-world@0.0.10
+  slack: circleci/slack@4.2.0
+
+version: 2.1
 
 jobs:
-  echo:
-    machine:
-      image: ubuntu-2004:202010-01
+  build:
+    docker:
+      - image: cimg/base:2020.01
     steps:
-      - run:
-          name: "Monitor CPU and memory usage"
-          background: true
-          command: |
-            sleep 3
-            echo "Timestamp             | CPU    | Mem" | tee /tmp/cpu_mem_util.log
-            while true; do
-              echo $(date +"%D %T %Z") \| $(top -bn1 | sed -n '/Cpu/p' | awk '{printf "'%05.2f'", 100.0 - $8}')%  \| $(free | grep Mem | awk '{printf "'%05.2f'", $3/$2 * 100.0}')% | tee -a /tmp/cpu_mem_util.log
-              sleep 1
-            done
-      - hello-world/echo-command
+      - run: echo Hello!
       - run: |
-          dd if=/dev/random iflag=fullblock of=./randomFile1 bs=5M count=1
-          sleep 5
-          dd if=/dev/random iflag=fullblock of=./randomFile2 bs=10M count=1
-          sleep 5
-          dd if=/dev/random iflag=fullblock of=./randomFile3 bs=15M count=1
-          sudo snap install stress-ng
-          stress-ng --vm-bytes $(awk '/MemAvailable/{printf "%d\n", $2 * 0.91;}' < /proc/meminfo)k --vm-keep -m 1 -t 30
-      - store_artifacts:
-          path: /tmp/cpu_mem_util.log
+          echo "export __SLACK_CHANNEL=\"jennings\"" | tee -a $BASH_ENV
+      - run: |
+          echo $__SLACK_CHANNEL
+      - slack/notify:
+            channel: $__SLACK_CHANNEL
+            ignore_errors: false
+            custom: |
+              {
+                  "blocks": [
+                      {
+                          "type": "section",
+                          "text": {
+                              "type": "mrkdwn",
+                              "text": "$CIRCLE_USERNAME's build of \n<$CIRCLE_BUILD_URL|$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME>\n(<https://app.circleci.com/pipelines/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME?branch=$CIRCLE_BRANCH|$CIRCLE_BRANCH>) \n- <$CIRCLE_BUILD_URL|$CIRCLE_JOB> finished"
+                          }
+                      }
+                  ]
+              }
+
 
 workflows:
-  main:
+  build:
     jobs:
-      - echo
+    - build:
+        context: Demos-context
+

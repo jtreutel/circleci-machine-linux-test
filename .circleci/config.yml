@@ -10,7 +10,7 @@ jobs:
     steps:
       - run: echo Hello!
       - run: |
-          echo "export __SLACK_CHANNEL=\"jennings\"" | tee -a $BASH_ENV
+          echo "export __SLACK_CHANNEL=\"slacktest\"" | tee -a $BASH_ENV
       - run: |
           echo $__SLACK_CHANNEL
       - slack/notify:

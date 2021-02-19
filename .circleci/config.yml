@@ -9,7 +9,7 @@ jobs:
       - image: cimg/base:2020.01
     steps:
       - run: echo Hello!
-      - run: echo ${TENTHOUSAND}
+      - run: echo ${ONETHOUSAND}
       - run: |
           echo "export __SLACK_CHANNEL=\"slacktest\"" | tee -a $BASH_ENV
       - run: |

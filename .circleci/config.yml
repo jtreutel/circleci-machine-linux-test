@@ -1,35 +1,16 @@
 version: 2.1
 orbs:
   hello-world: sample-orbs/hello-world@0.0.10
+  windows: circleci/windows@2.4.0
 
 jobs:
-  echo:
+  echo-win-version:
     machine:
-      image: ubuntu-2004:202010-01
+      image: win/default
     steps:
-      - run:
-          name: "Monitor CPU and memory usage"
-          background: true
-          command: |
-            sleep 3
-            echo "Timestamp             | CPU    | Mem" | tee /tmp/cpu_mem_util.log
-            while true; do
-              echo $(date +"%D %T %Z") \| $(top -bn1 | sed -n '/Cpu/p' | awk '{printf "'%05.2f'", 100.0 - $8}')%  \| $(free | grep Mem | awk '{printf "'%05.2f'", $3/$2 * 100.0}')% | tee -a /tmp/cpu_mem_util.log
-              sleep 1
-            done
-      - hello-world/echo-command
-      - run: |
-          dd if=/dev/random iflag=fullblock of=./randomFile1 bs=5M count=1
-          sleep 5
-          dd if=/dev/random iflag=fullblock of=./randomFile2 bs=10M count=1
-          sleep 5
-          dd if=/dev/random iflag=fullblock of=./randomFile3 bs=15M count=1
-          sudo snap install stress-ng
-          stress-ng --vm-bytes $(awk '/MemAvailable/{printf "%d\n", $2 * 0.91;}' < /proc/meminfo)k --vm-keep -m 1 -t 30
-      - store_artifacts:
-          path: /tmp/cpu_mem_util.log
+      - run: echo [System.Environment]::OSVersion.Version
 
 workflows:
   main:
     jobs:
-      - echo
+      - echo-win-version

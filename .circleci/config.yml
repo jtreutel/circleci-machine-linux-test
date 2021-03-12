@@ -5,8 +5,7 @@ orbs:
 
 jobs:
   echo-win-version:
-    machine:
-      image: windows/default
+    executor: windows/default
     steps:
       - run: echo [System.Environment]::OSVersion.Version
 

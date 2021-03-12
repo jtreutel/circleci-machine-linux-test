@@ -7,7 +7,7 @@ jobs:
   echo-win-version:
     executor: windows/default
     steps:
-      - run: echo [System.Environment]::OSVersion.Version
+      - run: echo ([System.Environment]::OSVersion.Version)
 
 workflows:
   main:
